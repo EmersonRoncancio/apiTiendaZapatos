@@ -19,7 +19,8 @@ export class AuthPanelService {
                 nombre: RegisterDto.nombre,
                 apellido: RegisterDto.apellido,
                 usuario: RegisterDto.usuario,
-                contraseña: contraseñaEcriptada
+                contraseña: contraseñaEcriptada,
+                claveAdministrativa: RegisterDto.claveAdministrativa
             })
             newAdmin.save()
 

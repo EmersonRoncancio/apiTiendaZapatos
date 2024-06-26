@@ -11,7 +11,7 @@ export class MongoDataBase {
         const { urlDb } = options
 
         try {
-            
+
             await mongoose.connect(urlDb)
 
             console.log('Conexion exitosa')
@@ -20,7 +20,7 @@ export class MongoDataBase {
         }
     }
 
-    static async disconectec(){
+    static async disconectec() {
         await mongoose.disconnect()
     }
 

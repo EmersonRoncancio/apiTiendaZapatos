@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { envs } from "../../../configs/envs";
 
 const AdminSchema = new mongoose.Schema({
     nombre: {
@@ -18,6 +19,10 @@ const AdminSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    claveAdministrativa:{
+        type: String,
+        require: true
+    }
 })
 
 export const AdminModel = mongoose.model('Admin', AdminSchema)
