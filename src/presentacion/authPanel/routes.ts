@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authPanelController } from "./controller";
+import { AuthPanelService } from "../services/authPanel.service";
 
 export class AuthPanelRoutes {
 
@@ -7,10 +8,11 @@ export class AuthPanelRoutes {
 
         const router = Router()
 
-        const controller = new authPanelController()
+        const service = new AuthPanelService()
+        const controller = new authPanelController(service)
 
         router
-            .get('/', controller.CreateAdmin)
+            .post('/', controller.RegisterAdmin)
 
         return router
     }
