@@ -21,7 +21,7 @@ export class AdminEntidad {
         if (!usuario) throw CustomError.badRequest('El Usuario es requerido')
         if (!claveAdministrativa) throw CustomError.badRequest('La clave administrativa es requerida')
 
-        const enditad = new AdminEntidad(id || _id, nombre, apellido, contraseña, usuario, claveAdministrativa)
+        const enditad = new AdminEntidad(id || _id, nombre, apellido, usuario, contraseña, claveAdministrativa)
 
         return enditad
     }

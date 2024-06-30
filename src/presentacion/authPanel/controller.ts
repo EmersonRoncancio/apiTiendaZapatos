@@ -1,7 +1,8 @@
 import { Request, Response } from "express"
-import { AdminDTO } from "../../dominio/Dtos/authPanel/Admin.dto"
+import { RegisterAdminDTO } from "../../dominio/Dtos/authPanel/Register.dto"
 import { AuthPanelService } from "../services/authPanel.service"
 import { CustomError } from "../../dominio/errors/CustmoErrors"
+import { LoginAdminDTO } from "../../dominio/Dtos/authPanel/Login.dto"
 
 export class authPanelController {
 
@@ -19,7 +20,7 @@ export class authPanelController {
     RegisterAdmin = (req: Request, res: Response) => {
         const body = req.body
 
-        const [error, RegisterDto] = AdminDTO.Create(body)
+        const [error, RegisterDto] = RegisterAdminDTO.Create(body)
         if(error) return res.status(400).json({error})
 
         this.ServiceAuthPanel.RegisterAdmin(RegisterDto!)
@@ -27,4 +28,14 @@ export class authPanelController {
             .catch( error => this.handleError(error, res))
     }
 
+    LoginAdmin = (req: Request, res: Response) => {
+        const body = req.body
+        
+        const [error, loginDto] = LoginAdminDTO.start(body)
+        if(error) return res.status(400).json({error})
+
+        this.ServiceAuthPanel.LoginAdmin(loginDto!)
+            .then( admin => res.json(admin))
+            .catch(error => this.handleError(error, res))
+    }
 }

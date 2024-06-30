@@ -1,12 +1,15 @@
 import { bryptAdapter } from "../../configs/bcrypt.adapeter";
+import { envs } from "../../configs/envs";
+import { JwtAdapter } from "../../configs/jwt.adapter";
 import { AdminModel } from "../../data/mongo/models/admin.model";
-import { AdminDTO } from "../../dominio/Dtos/authPanel/Admin.dto";
+import { LoginAdminDTO } from "../../dominio/Dtos/authPanel/Login.dto";
+import { RegisterAdminDTO } from "../../dominio/Dtos/authPanel/Register.dto";
 import { AdminEntidad } from "../../dominio/entidades/Admin.entidad";
 import { CustomError } from "../../dominio/errors/CustmoErrors";
 
 export class AuthPanelService {
 
-    public async RegisterAdmin(RegisterDto: AdminDTO) {
+    public async RegisterAdmin(RegisterDto: RegisterAdminDTO) {
 
         const userValidate = await AdminModel.findOne({ usuario: RegisterDto.usuario })
         if (userValidate) throw CustomError.badRequest('El usuario ya exite')
@@ -14,13 +17,14 @@ export class AuthPanelService {
         try {
 
             const contraseñaEcriptada = bryptAdapter.hash(RegisterDto.contraseña)
+            const claveAdministrativaHash = bryptAdapter.hash(RegisterDto.claveAdministrativa)
 
             const newAdmin = new AdminModel({
                 nombre: RegisterDto.nombre,
                 apellido: RegisterDto.apellido,
                 usuario: RegisterDto.usuario,
                 contraseña: contraseñaEcriptada,
-                claveAdministrativa: RegisterDto.claveAdministrativa
+                claveAdministrativa: claveAdministrativaHash
             })
             newAdmin.save()
 
@@ -30,6 +34,28 @@ export class AuthPanelService {
         } catch (error) {
             console.log(error)
             throw CustomError.internalServer('Internal Server Error')
+        }
+    }
+
+    public async LoginAdmin(LoginDto: LoginAdminDTO) {
+
+        const validateUser = await AdminModel.findOne({ usuario: LoginDto.usuario })
+        if (!validateUser) throw CustomError.badRequest('El usuario o contraseña son incorrecto')
+
+        const validateContraseña = bryptAdapter.compare(LoginDto.contraseña, validateUser?.contraseña!)
+        if (!validateContraseña) throw CustomError.badRequest('El usuario o contraseña son incorrectos')
+
+        const { contraseña, claveAdministrativa, ...AdminCheck } = AdminEntidad.fromObject(validateUser)
+
+        const token = await JwtAdapter.generate({
+            id: validateUser.id,
+            usuario: validateUser.usuario,
+        }, envs.JWT_VALIDATE)
+        if (!token) throw CustomError.internalServer('Error al generar token')
+
+        return {
+            token: token,
+            Admin: AdminCheck,
         }
     }
 

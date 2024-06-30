@@ -13,6 +13,7 @@ export class AuthPanelRoutes {
 
         router
             .post('/', controller.RegisterAdmin)
+            .post('/login', controller.LoginAdmin)
 
         return router
     }
