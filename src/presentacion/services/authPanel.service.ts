@@ -2,6 +2,7 @@ import { bryptAdapter } from "../../configs/bcrypt.adapeter";
 import { envs } from "../../configs/envs";
 import { JwtAdapter } from "../../configs/jwt.adapter";
 import { AdminModel } from "../../data/mongo/models/admin.model";
+import { ForgotPasswordDTO } from "../../dominio/Dtos/authPanel/ForgotPassword";
 import { LoginAdminDTO } from "../../dominio/Dtos/authPanel/Login.dto";
 import { RegisterAdminDTO } from "../../dominio/Dtos/authPanel/Register.dto";
 import { AdminEntidad } from "../../dominio/entidades/Admin.entidad";
@@ -12,7 +13,7 @@ export class AuthPanelService {
     public async RegisterAdmin(RegisterDto: RegisterAdminDTO) {
 
         const userValidate = await AdminModel.findOne({ usuario: RegisterDto.usuario })
-        if (userValidate) throw CustomError.badRequest('El usuario ya exite')
+        if (userValidate) throw CustomError.badRequest('El usuario ya existe')
 
         try {
 
@@ -40,7 +41,7 @@ export class AuthPanelService {
     public async LoginAdmin(LoginDto: LoginAdminDTO) {
 
         const validateUser = await AdminModel.findOne({ usuario: LoginDto.usuario })
-        if (!validateUser) throw CustomError.badRequest('El usuario o contraseña son incorrecto')
+        if (!validateUser) throw CustomError.badRequest('El usuario o contraseña son incorrectos')
 
         const validateContraseña = bryptAdapter.compare(LoginDto.contraseña, validateUser?.contraseña!)
         if (!validateContraseña) throw CustomError.badRequest('El usuario o contraseña son incorrectos')
@@ -64,14 +65,36 @@ export class AuthPanelService {
         if (!tokenvalidate) throw CustomError.notAuthorized('Token no autorizado')
 
         const { usuario } = tokenvalidate as { usuario: string }
-        if(!usuario) throw CustomError.badRequest('El usuario no se encuentra en el token')
+        if (!usuario) throw CustomError.badRequest('El usuario no se encuentra en el token')
 
-        const AdminValidate = await AdminModel.findOne({usuario: usuario})
-        if(!AdminValidate) throw CustomError.notAuthorized('El usuario no existe')
+        const AdminValidate = await AdminModel.findOne({ usuario: usuario })
+        if (!AdminValidate) throw CustomError.notAuthorized('El usuario no existe')
 
         return {
             status: 'Usuario Verificado'
         }
     }
 
+    public async ForgotPassword(forgotDto: ForgotPasswordDTO) {
+
+        const validateUsuario = await AdminModel.findOne({ usuario: forgotDto.usuario })
+        if (!validateUsuario) throw CustomError.badRequest('El usuario no existe')
+
+
+        try {
+            const contraseñaEcriptada = bryptAdapter.hash(forgotDto.nuevaContraseña)
+
+            await AdminModel.findOneAndUpdate(
+                { usuario: validateUsuario.usuario },
+                { $set: { contraseña: contraseñaEcriptada } },
+                { new: true, runValidators: true }
+            )
+
+            return {
+                mensaje: 'Contraseña actualizada exitosamente'
+            }
+        } catch (error) {
+            throw CustomError.internalServer('Internal Server Errror')
+        }
+    }
 }

@@ -18,7 +18,9 @@ export class RegisterAdminDTO {
         if (!apellido) return ['El apellido es requerido', undefined]
         if (!usuario) return ['El usuario es requerido', undefined]
         if (!contraseña) return ['La contraseña es requerida', undefined]
-        if (contraseña.length < 8  || contraseña.length > 20) return ['La contraseña tiene que ser mayor a 8 digitos y menor a 20 digitos', undefined]
+        if (contraseña.length < 8 || contraseña.length > 20) {
+            return ['La contraseña tiene que ser mayor 8 digitos y menor a 20 digitos', undefined]
+        }
         if (!claveAdministrativa) return ['La clave administrativa es requerida', undefined]
         if (claveAdministrativa !== envs.CLAVE_ADMINISTRATIVA) return ['La clave administrativa es invalida']
 

@@ -4,6 +4,7 @@ import { AuthPanelService } from "../services/authPanel.service"
 import { CustomError } from "../../dominio/errors/CustmoErrors"
 import { LoginAdminDTO } from "../../dominio/Dtos/authPanel/Login.dto"
 import { error } from "console"
+import { ForgotPasswordDTO } from "../../dominio/Dtos/authPanel/ForgotPassword"
 
 export class authPanelController {
 
@@ -47,6 +48,17 @@ export class authPanelController {
 
         this.ServiceAuthPanel.TokenValidate(token)
             .then(status => res.json(status))
+            .catch(error => this.handleError(error, res))
+    }
+
+    ForgotPassword = (req: Request, res: Response) => {
+        const body = req.body
+
+        const [error, forgotPasswordDto] = ForgotPasswordDTO.start(body)
+        if (error) return res.status(400).json({ error })
+
+        this.ServiceAuthPanel.ForgotPassword(forgotPasswordDto!)
+            .then(newContraseña => res.status(201).json(newContraseña))
             .catch(error => this.handleError(error, res))
     }
 }

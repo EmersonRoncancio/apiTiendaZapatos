@@ -15,6 +15,7 @@ export class AuthPanelRoutes {
             .post('/', controller.RegisterAdmin)
             .post('/login', controller.LoginAdmin)
             .post('/validateToken', controller.ValidateToken)
+            .patch('/forgotPassword', controller.ForgotPassword)
 
         return router
     }
