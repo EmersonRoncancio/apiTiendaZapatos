@@ -4,24 +4,24 @@ import { envs } from "../../../configs/envs";
 const AdminSchema = new mongoose.Schema({
     nombre: {
         type: String,
-        require: true,
+        required: true,
     },
     apellido: {
         type: String,
-        require: true
+        required: true
     },
     usuario: {
         type: String,
-        require: true,
+        required: true,
         unique: true
     },
     contraseña: {
         type: String,
-        require: true
+        required: true
     },
     claveAdministrativa:{
         type: String,
-        require: true
+        required: true
     }
 })
 

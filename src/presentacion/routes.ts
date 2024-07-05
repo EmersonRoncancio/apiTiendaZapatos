@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AuthPanelRoutes } from "./authPanel/routes";
+import { ZapatosRoutes } from "./zapatos/routes";
 
 
 export class AppRoutes {
@@ -9,6 +10,7 @@ export class AppRoutes {
         const router = Router()
 
         router.use('/api/authPanel', AuthPanelRoutes.routes)
+        router.use('api/zapatos', ZapatosRoutes.routes)
 
         return router
     }

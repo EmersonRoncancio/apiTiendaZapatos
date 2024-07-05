@@ -19,7 +19,7 @@ export class ForgotPasswordDTO {
         }
         if (!claveAdministrativa) return ['La clave administrativa es requerida', undefined]
         if (claveAdministrativa !== envs.CLAVE_ADMINISTRATIVA) {
-            return ['La clave es administrativa es invalida', undefined]
+            return ['La clave administrativa es invalida', undefined]
         }
 
         return [undefined, new ForgotPasswordDTO(usuario, nuevaContraseña, claveAdministrativa)]
