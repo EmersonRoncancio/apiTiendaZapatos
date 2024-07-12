@@ -1,4 +1,5 @@
 import express, { Router } from 'express'
+import fileUpload from 'express-fileupload'
 import cors from 'cors'
 
 interface Options {
@@ -24,6 +25,10 @@ export class Sever {
         this.app.use(express.json())
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cors())
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: './uploads'  // Directorio temporal para archivos subidos
+          }))
 
         this.app.use(this.routes)
 

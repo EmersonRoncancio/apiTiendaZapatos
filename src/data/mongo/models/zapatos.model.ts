@@ -1,20 +1,11 @@
 import mongoose, { Schema } from "mongoose";
+import { Tallas } from "../../../dominio/types/enums";
+import { ImagaDataType } from "../../../dominio/types/interfaces";
 
-enum Tallas {
-    T34 = 34,
-    T35 = 35,
-    T36 = 36,
-    T37 = 37,
-    T38 = 38,
-    T39 = 39,
-    T40 = 40,
-    T41 = 41,
-    T42 = 42,
-    T43 = 43,
-    T44 = 44,
-    T45 = 45,
-    T46 = 46
-}
+const imageDataTypeSchema = new Schema<ImagaDataType>({
+    url: { type: String, required: true },
+    public_id: { type: String, required: true }
+});
 
 const zapatosSchema = new mongoose.Schema({
     nombre: {
@@ -45,13 +36,13 @@ const zapatosSchema = new mongoose.Schema({
         default: 0
     },
     imagen: {
-        type: String || [String],
+        type: [imageDataTypeSchema],
         required: true
     },
     Admin: {
         type: Schema.Types.ObjectId,
         ref: 'Admin',
-        required: true 
+        required: true
     }
 })
 

@@ -10,7 +10,7 @@ export class AppRoutes {
         const router = Router()
 
         router.use('/api/authPanel', AuthPanelRoutes.routes)
-        router.use('api/zapatos', ZapatosRoutes.routes)
+        router.use('/api/zapatos', ZapatosRoutes.routes)
 
         return router
     }
