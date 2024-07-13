@@ -1,16 +1,19 @@
 import { Router } from "express";
 import { ZapatosController } from "./controller";
+import { AuthPanelMiddleware } from "../middlewares/authPanel.middlaware";
+import { ZapatosService } from "../services/zapatos.service";
 
-export class ZapatosRoutes{
+export class ZapatosRoutes {
 
-    static get routes(): Router{
+    static get routes(): Router {
 
         const router = Router()
 
-        const controller = new ZapatosController()
+        const service = new ZapatosService()
+        const controller = new ZapatosController(service)
 
         router.
-            post('/', controller.CreateZapatos)
+            post('/', [AuthPanelMiddleware.validateAdmin], controller.CreateZapatos)
 
         return router
     }

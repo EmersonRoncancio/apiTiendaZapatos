@@ -50,7 +50,6 @@ export class AuthPanelService {
 
         const token = await JwtAdapter.generate({
             id: validateUser.id,
-            usuario: validateUser.usuario,
         }, envs.JWT_VALIDATE)
         if (!token) throw CustomError.internalServer('Error al generar token')
 

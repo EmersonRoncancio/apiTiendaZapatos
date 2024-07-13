@@ -3,10 +3,13 @@ import { Request, Response } from 'express'
 import { UploadedFile } from "express-fileupload";
 import { cloudinaryAdapter } from "../../configs/cloudinary.adapter";
 import { CreateZapatosDTO } from "../../dominio/Dtos/zapatos/createZapatos.dto";
+import { ZapatosService } from "../services/zapatos.service";
 
 export class ZapatosController {
 
-    constructor() { }
+    constructor(
+        public readonly ZapatosService: ZapatosService
+    ) { }
 
     private handleError = (error: any, res: Response) => {
 
@@ -20,21 +23,17 @@ export class ZapatosController {
         const body = req.body
 
         if (!req.files?.image || Object.keys(req.files).length === 0) {
-            return res.status(400).json({error:'Ningun archivo fue cargado'});
+            return res.status(400).json({ error: 'Ningun archivo fue cargado' });
         }
 
         const file = req.files.image as UploadedFile;
 
-        const [error, createZaptoDto] = CreateZapatosDTO.Start(body,file)
-        if(error) return res.json({error})
+        const [error, createZaptoDto] = CreateZapatosDTO.Start(body, file)
+        if (error) return res.json({ error })
 
-        cloudinaryAdapter.uploadImageArr(createZaptoDto?.imagen!)
-            .then(async(image) =>{
-                const result = await Promise.all(image!)
-                console.log(result)
-            })
-
-        res.json(createZaptoDto)
+        this.ZapatosService.createZapatos(createZaptoDto!, body.Admin)
+            .then(newZapato => res.status(201).json(newZapato))
+            .catch(error => this.handleError(error, res))
     }
 
 }

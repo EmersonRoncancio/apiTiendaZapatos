@@ -11,7 +11,6 @@ export const JwtAdapter = {
         })
     },
     validateToken:<T>(token: string, llave: string): Promise<T|null> => {
-
         return new Promise((resolve) => {
             jwt.verify(token, llave , (error, decoded)=>{
 
