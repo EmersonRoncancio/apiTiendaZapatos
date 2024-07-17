@@ -4,6 +4,7 @@ import { CreateZapatosDTO } from "../../dominio/Dtos/zapatos/createZapatos.dto";
 import { AdminEntidad } from "../../dominio/entidades/Admin.entidad";
 import { ZapatosEntidad } from "../../dominio/entidades/Zapatos.entidad";
 import { CustomError } from "../../dominio/errors/CustmoErrors";
+import fs from 'fs-extra'
 
 export class ZapatosService {
 
@@ -14,6 +15,12 @@ export class ZapatosService {
 
         try {
             const urls = await cloudinaryAdapter.uploadImageArr(creatDto.imagen)
+            creatDto.imagen.forEach(async (filePath) => {
+                const exists = await fs.pathExists(filePath);
+                if (exists) {
+                    await fs.unlink(filePath);
+                }
+            })
             const images = await Promise.all(urls!)
             const imagesUrls = images.map((image) => {
                 return {
@@ -38,7 +45,8 @@ export class ZapatosService {
 
             return zaptoEntidad
         } catch (error) {
-            throw CustomError.internalServer('Internal Server Error')
+            console.log(error)
+            throw CustomError.internalServer(`${error}`)
         }
     }
 }
