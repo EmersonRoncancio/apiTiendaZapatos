@@ -62,11 +62,15 @@ export class AuthPanelService {
     public async TokenValidate(token: string) {
         const tokenvalidate = await JwtAdapter.validateToken(token, envs.JWT_VALIDATE)
         if (!tokenvalidate) throw CustomError.notAuthorized('Token no autorizado')
+        console.log(tokenvalidate)
 
-        const { usuario } = tokenvalidate as { usuario: string }
-        if (!usuario) throw CustomError.badRequest('El usuario no se encuentra en el token')
+        const { id } = tokenvalidate as { id: string }
+        if (!id) {
+            console.log('Prueba')
+            throw CustomError.badRequest('El usuario no se encuentra en el token')
+        }
 
-        const AdminValidate = await AdminModel.findOne({ usuario: usuario })
+        const AdminValidate = await AdminModel.findById(id)
         if (!AdminValidate) throw CustomError.notAuthorized('El usuario no existe')
 
         return {
