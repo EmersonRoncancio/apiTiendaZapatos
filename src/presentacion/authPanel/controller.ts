@@ -44,7 +44,6 @@ export class authPanelController {
     ValidateToken = (req: Request, res: Response) => {
         const { token } = req.body
 
-        console.log(token)
         if (!token) return res.status(400).json({ error: 'Se requiere el JWT' })
 
         this.ServiceAuthPanel.TokenValidate(token)
