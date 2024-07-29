@@ -16,7 +16,9 @@ export class ZapatosEntidad {
 
     static fromObject(options: { [key: string]: any }) {
         const { id, _id, nombre, marca, talla, color, precio, stock, imagen } = options
+        console.log(precio)
 
+        if(precio) console.log('siexiste')
         if (!id && !_id) throw CustomError.badRequest('El id es requerido')
         if (!nombre) throw CustomError.badRequest('El nombre es requerido')
         if (!marca) throw CustomError.badRequest('La marca es requerida')

@@ -12,8 +12,9 @@ export class ZapatosRoutes {
         const service = new ZapatosService()
         const controller = new ZapatosController(service)
 
-        router.
-            post('/', [AuthPanelMiddleware.validateAdmin], controller.CreateZapatos)
+        router
+            .post('/', [AuthPanelMiddleware.validateAdmin], controller.CreateZapatos)
+            .get('/get', controller.GetZapatos)
 
         return router
     }

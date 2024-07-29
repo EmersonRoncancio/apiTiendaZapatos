@@ -1,9 +1,9 @@
 import { CustomError } from "../../dominio/errors/CustmoErrors"
 import { Request, Response } from 'express'
 import { UploadedFile } from "express-fileupload";
-import { cloudinaryAdapter } from "../../configs/cloudinary.adapter";
 import { CreateZapatosDTO } from "../../dominio/Dtos/zapatos/createZapatos.dto";
 import { ZapatosService } from "../services/zapatos.service";
+import { PaginationDto } from "../../dominio/Dtos/shared/pagination.dto";
 
 export class ZapatosController {
 
@@ -33,6 +33,17 @@ export class ZapatosController {
 
         this.ZapatosService.createZapatos(createZaptoDto!, body.Admin)
             .then(newZapato => res.status(201).json(newZapato))
+            .catch(error => this.handleError(error, res))
+    }
+
+    GetZapatos = (req: Request, res: Response) => {
+        const { page = 1, limit = 10 } = req.query
+
+        const [error, paginationDto] = PaginationDto.Start(+page, +limit)
+        if (error) return res.status(400).json({ error })
+
+        this.ZapatosService.GetZapatos(paginationDto!)
+            .then(zapatos => res.json(zapatos))
             .catch(error => this.handleError(error, res))
     }
 

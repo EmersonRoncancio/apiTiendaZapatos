@@ -1,5 +1,6 @@
 import { cloudinaryAdapter } from "../../configs/cloudinary.adapter";
 import { ZapatosModel } from "../../data/mongo/models/zapatos.model";
+import { PaginationDto } from "../../dominio/Dtos/shared/pagination.dto";
 import { CreateZapatosDTO } from "../../dominio/Dtos/zapatos/createZapatos.dto";
 import { AdminEntidad } from "../../dominio/entidades/Admin.entidad";
 import { ZapatosEntidad } from "../../dominio/entidades/Zapatos.entidad";
@@ -47,6 +48,32 @@ export class ZapatosService {
         } catch (error) {
             console.log(error)
             throw CustomError.internalServer(`${error}`)
+        }
+    }
+
+    public async GetZapatos(PaginationDto: PaginationDto){
+        const {page, limit} = PaginationDto
+
+        try {
+            const total = await ZapatosModel.countDocuments()
+            const zapatos = await ZapatosModel.find()
+                .skip((page-1)*limit)
+                .limit(limit)
+
+            const zaptosPaginados = zapatos.map((zapato)=>{
+                console.log(zapato)
+                return ZapatosEntidad.fromObject(zapato)
+            })
+
+            return {
+                Total: total,
+                Page: page,
+                Limit: limit,
+                Zapatos: zaptosPaginados
+            }
+        } catch (error) {
+            console.log(`${error}`)
+            throw CustomError.internalServer('Internal Server Error')
         }
     }
 }
