@@ -61,7 +61,6 @@ export class ZapatosService {
                 .limit(limit)
 
             const zaptosPaginados = zapatos.map((zapato)=>{
-                console.log(zapato)
                 return ZapatosEntidad.fromObject(zapato)
             })
 
@@ -72,7 +71,6 @@ export class ZapatosService {
                 Zapatos: zaptosPaginados
             }
         } catch (error) {
-            console.log(`${error}`)
             throw CustomError.internalServer('Internal Server Error')
         }
     }
