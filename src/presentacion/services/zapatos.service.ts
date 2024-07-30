@@ -46,8 +46,7 @@ export class ZapatosService {
 
             return zaptoEntidad
         } catch (error) {
-            console.log(error)
-            throw CustomError.internalServer(`${error}`)
+            throw CustomError.internalServer('Internal Server Error')
         }
     }
 

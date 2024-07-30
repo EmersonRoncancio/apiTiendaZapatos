@@ -33,7 +33,6 @@ export class AuthPanelService {
 
             return newAdminEtity
         } catch (error) {
-            console.log(error)
             throw CustomError.internalServer('Internal Server Error')
         }
     }
