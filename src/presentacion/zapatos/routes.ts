@@ -14,7 +14,7 @@ export class ZapatosRoutes {
 
         router
             .post('/', [AuthPanelMiddleware.validateAdmin], controller.CreateZapatos)
-            .get('/get', controller.GetZapatos)
+            .get('/', controller.GetZapatos)
 
         return router
     }
