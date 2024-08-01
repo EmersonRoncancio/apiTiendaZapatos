@@ -50,16 +50,16 @@ export class ZapatosService {
         }
     }
 
-    public async GetZapatos(PaginationDto: PaginationDto){
-        const {page, limit} = PaginationDto
+    public async GetZapatos(PaginationDto: PaginationDto) {
+        const { page, limit } = PaginationDto
 
         try {
             const total = await ZapatosModel.countDocuments()
             const zapatos = await ZapatosModel.find()
-                .skip((page-1)*limit)
+                .skip((page - 1) * limit)
                 .limit(limit)
 
-            const zaptosPaginados = zapatos.map((zapato)=>{
+            const zaptosPaginados = zapatos.map((zapato) => {
                 return ZapatosEntidad.fromObject(zapato)
             })
 
@@ -67,6 +67,7 @@ export class ZapatosService {
                 Total: total,
                 Page: page,
                 Limit: limit,
+                nextPage: (page * limit) < total,
                 Zapatos: zaptosPaginados
             }
         } catch (error) {
