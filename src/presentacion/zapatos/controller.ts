@@ -4,6 +4,7 @@ import { UploadedFile } from "express-fileupload";
 import { CreateZapatosDTO } from "../../dominio/Dtos/zapatos/createZapatos.dto";
 import { ZapatosService } from "../services/zapatos.service";
 import { PaginationDto } from "../../dominio/Dtos/shared/pagination.dto";
+import { error } from "console";
 
 export class ZapatosController {
 
@@ -47,4 +48,14 @@ export class ZapatosController {
             .catch(error => this.handleError(error, res))
     }
 
+
+    DeleteZapato = (req: Request, res: Response) => {
+        const { id } = req.params
+
+        if (!id) res.status(400).json({ error: 'El id es requerido' })
+
+        this.ZapatosService.DeleteZaptosId(id)
+            .then(message => res.json(message))
+            .catch(error => this.handleError(error, res))
+    }
 }

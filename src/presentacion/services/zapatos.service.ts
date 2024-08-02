@@ -1,4 +1,5 @@
 import { cloudinaryAdapter } from "../../configs/cloudinary.adapter";
+import { Validates } from "../../configs/validates";
 import { ZapatosModel } from "../../data/mongo/models/zapatos.model";
 import { PaginationDto } from "../../dominio/Dtos/shared/pagination.dto";
 import { CreateZapatosDTO } from "../../dominio/Dtos/zapatos/createZapatos.dto";
@@ -69,6 +70,29 @@ export class ZapatosService {
                 Limit: limit,
                 nextPage: (page * limit) < total,
                 Zapatos: zaptosPaginados
+            }
+        } catch (error) {
+            throw CustomError.internalServer('Internal Server Error')
+        }
+    }
+
+    public async DeleteZaptosId(id: string) {
+
+        if(!Validates.MongoId(id)) throw CustomError.badRequest('Id Invalida')
+        const zapatoExist = await ZapatosModel.findOne({ _id: id })
+        if (!zapatoExist) throw CustomError.badRequest('El zapato no existe')
+
+        try {
+
+            await ZapatosModel.findByIdAndDelete(id)
+
+            const arrPublicId = zapatoExist.imagen.map((image) => {
+                return image.public_id
+            })
+            await cloudinaryAdapter.deleteImageArr(arrPublicId)
+
+            return {
+                message: 'Se ha elimiando exitosamente'
             }
         } catch (error) {
             throw CustomError.internalServer('Internal Server Error')
