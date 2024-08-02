@@ -78,7 +78,7 @@ export class ZapatosService {
 
     public async DeleteZaptosId(id: string) {
 
-        if(!Validates.MongoId(id)) throw CustomError.badRequest('Id Invalida')
+        if (!Validates.MongoId(id)) throw CustomError.badRequest('Id Invalida')
         const zapatoExist = await ZapatosModel.findById(id)
         if (!zapatoExist) throw CustomError.badRequest('El zapato no existe')
 
@@ -92,7 +92,7 @@ export class ZapatosService {
             await cloudinaryAdapter.deleteImageArr(arrPublicId)
 
             return {
-                message: 'Se ha elimiando exitosamente'
+                message: 'Se ha eliminado exitosamente'
             }
         } catch (error) {
             throw CustomError.internalServer('Internal Server Error')
