@@ -79,7 +79,7 @@ export class ZapatosService {
     public async DeleteZaptosId(id: string) {
 
         if(!Validates.MongoId(id)) throw CustomError.badRequest('Id Invalida')
-        const zapatoExist = await ZapatosModel.findOne({ _id: id })
+        const zapatoExist = await ZapatosModel.findById(id)
         if (!zapatoExist) throw CustomError.badRequest('El zapato no existe')
 
         try {
