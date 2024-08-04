@@ -90,11 +90,15 @@ export class ZapatosService {
                 return image.public_id
             })
             await cloudinaryAdapter.deleteImageArr(arrPublicId)
-            const resulZapatos = await ZapatosModel.find()
+            const zapatosMongo = await ZapatosModel.find()
+
+            const zapatosEntidad = zapatosMongo.map((zapato)=>{
+                return ZapatosEntidad.fromObject(zapato)
+            })
 
             return {
                 message: 'Se ha eliminado exitosamente',
-                zapatos: resulZapatos
+                zapatos: zapatosEntidad
             }
         } catch (error) {
             throw CustomError.internalServer('Internal Server Error')
