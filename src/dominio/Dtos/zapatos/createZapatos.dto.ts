@@ -1,46 +1,5 @@
 
-
-
-// nombre: {
-//     type: String,
-//     required: true,
-// },
-// marca: {
-//     type: String,
-//     requiredd: true
-// },
-// talla: {
-//     type: Number,
-//     enum: Tallas,
-//     required: true
-// },
-// color: {
-//     type: String,
-//     requiredd: true
-// },
-// precio: {
-//     type: Number,
-//     required: true,
-//     default: 0
-// },
-// stock: {
-//     type: Number,
-//     required: true,
-//     default: 0
-// },
-// imagen: {
-//     type: String,
-//     imageData: [ImageData],
-//     required: true
-// },
-// Admin: {
-//     type: Schema.Types.ObjectId,
-//     ref: 'Admin',
-//     required: true 
-// }
-
 import { Tallas } from "../../types/enums";
-import { ImagaDataType } from "../../types/interfaces";
 
 export class CreateZapatosDTO {
 

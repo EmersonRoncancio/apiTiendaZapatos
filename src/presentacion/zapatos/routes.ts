@@ -16,6 +16,7 @@ export class ZapatosRoutes {
             .post('/', [AuthPanelMiddleware.validateAdmin], controller.CreateZapatos)
             .get('/', controller.GetZapatos)
             .delete('/delete/:id', [AuthPanelMiddleware.validateAdmin], controller.DeleteZapato)
+            .put('/update/:id', [AuthPanelMiddleware.validateAdmin], controller.UpdateZapato)
 
         return router
     }

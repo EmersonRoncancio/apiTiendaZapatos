@@ -5,6 +5,8 @@ import { CreateZapatosDTO } from "../../dominio/Dtos/zapatos/createZapatos.dto";
 import { ZapatosService } from "../services/zapatos.service";
 import { PaginationDto } from "../../dominio/Dtos/shared/pagination.dto";
 import { error } from "console";
+import { UpdateZapatoDTO } from "../../dominio/Dtos/zapatos/updateZapatos.dto";
+import { json } from "stream/consumers";
 
 export class ZapatosController {
 
@@ -56,6 +58,24 @@ export class ZapatosController {
 
         this.ZapatosService.DeleteZaptosId(id)
             .then(message => res.json(message))
+            .catch(error => this.handleError(error, res))
+    }
+
+    UpdateZapato = (req: Request, res: Response) => {
+        const { id } = req.params
+
+        const body = req.body
+
+        if (!req.files?.image || Object.keys(req.files).length === 0) {
+            return res.status(400).json({ error: 'Ningun archivo fue cargado' });
+        }
+
+        const file = req.files.image as UploadedFile
+        const [error, UpdateDto] = UpdateZapatoDTO.start(body, file)
+        if (error) return res.status(400).json({ error })
+
+        this.ZapatosService.UpdateZapatos(UpdateDto!, id, body.Admin)
+            .then(update => res.json(update))
             .catch(error => this.handleError(error, res))
     }
 }
