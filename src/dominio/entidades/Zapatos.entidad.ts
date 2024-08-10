@@ -1,5 +1,6 @@
 import { CustomError } from "../errors/CustmoErrors";
 import { Tallas } from "../types/enums";
+import { ImageDataType } from "../types/interfaces";
 
 export class ZapatosEntidad {
 
@@ -11,7 +12,7 @@ export class ZapatosEntidad {
         public readonly color: string,
         public readonly precio: number,
         public readonly stock: number,
-        public readonly imagen: string[],
+        public readonly imagen: ImageDataType[],
     ) { }
 
     static fromObject(options: { [key: string]: any }) {
@@ -26,11 +27,14 @@ export class ZapatosEntidad {
         if (isNaN(stock)) throw CustomError.badRequest('El stock es invalido')
         if (!imagen) throw CustomError.badRequest('Las imagenes son requeridas')
 
-        const urls = imagen.map((imagen: any) => {
-            return imagen.url
+        const images = imagen.map((imagen: any) => {
+            return {
+                url: imagen.url,
+                public_id: imagen.public_id
+            }
         })
 
-        const entidad = new ZapatosEntidad(id || _id, nombre, marca, talla, color, precio, stock, urls)
+        const entidad = new ZapatosEntidad(id || _id, nombre, marca, talla, color, precio, stock, images)
 
         return entidad
     }

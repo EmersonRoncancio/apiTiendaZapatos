@@ -1,8 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 import { Tallas } from "../../../dominio/types/enums";
-import { ImagaDataType } from "../../../dominio/types/interfaces";
+import { ImageDataType } from "../../../dominio/types/interfaces";
 
-const imageDataTypeSchema = new Schema<ImagaDataType>({
+const imageDataTypeSchema = new Schema<ImageDataType>({
     url: { type: String, required: true },
     public_id: { type: String, required: true }
 });

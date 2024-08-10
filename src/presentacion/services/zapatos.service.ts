@@ -8,6 +8,7 @@ import { AdminEntidad } from "../../dominio/entidades/Admin.entidad";
 import { ZapatosEntidad } from "../../dominio/entidades/Zapatos.entidad";
 import { CustomError } from "../../dominio/errors/CustmoErrors";
 import fs from 'fs-extra'
+import { ImageDataType } from "../../dominio/types/interfaces";
 
 export class ZapatosService {
 
@@ -111,20 +112,26 @@ export class ZapatosService {
         const valideteZapto = await ZapatosModel.findById(id)
         if (!valideteZapto) throw CustomError.badRequest('El zapato no existe')
 
+        const totalIMages = valideteZapto.imagen.length + UpdateDto.imagesAdd.length - UpdateDto.imagesDelete.length
+        if (totalIMages < 2) throw CustomError.badRequest('No se permite menos de dos imagenes')
+
         try {
 
-            const arrPublicId = valideteZapto.imagen.map((image) => {
-                return image.public_id
+            UpdateDto?.imagesDelete?.map(async (image) => {
+                await cloudinaryAdapter.deleteImageArr(image)
             })
-            await cloudinaryAdapter.deleteImageArr(arrPublicId)
 
-            const urls = await cloudinaryAdapter.uploadImageArr(UpdateDto.imagen)
-            UpdateDto.imagen.forEach(async (filePath) => {
+            const urls = await cloudinaryAdapter.uploadImageArr(UpdateDto.imagesAdd)
+            UpdateDto.imagesAdd.forEach(async (filePath) => {
                 const exists = await fs.pathExists(filePath);
                 if (exists) {
                     await fs.unlink(filePath);
                 }
             })
+
+            const urlsStay = valideteZapto.imagen.filter(elemento => {
+                return !UpdateDto?.imagesDelete?.includes(elemento.public_id)
+            });
 
             const images = await Promise.all(urls!)
             const imagesUrls = images.map((image) => {
@@ -141,7 +148,7 @@ export class ZapatosService {
                 color: UpdateDto.color,
                 precio: UpdateDto.precio,
                 stock: UpdateDto.stock,
-                imagen: imagesUrls,
+                imagen: [...urlsStay, ...imagesUrls],
                 Admin: Admin.id
             })
 

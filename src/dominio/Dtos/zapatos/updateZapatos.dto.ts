@@ -9,13 +9,15 @@ export class UpdateZapatoDTO {
         public readonly color: string,
         public readonly precio: number,
         public readonly stock: number,
-        public readonly imagen: string[],
+        public readonly imagesAdd: string[],
+        public readonly imagesDelete: string[]
     ) { }
 
-    static start(options: { [key: string]: any }, imagen: any): [string?, UpdateZapatoDTO?] {
+    static start(options: { [key: string]: any }, imagen?: any): [string?, UpdateZapatoDTO?] {
 
-        const { nombre, marca, talla, color, precio, stock } = options
-        let filesArr = []
+        const { nombre, marca, talla, color, precio, stock, imagesDelete } = options
+        let filesArrDelete: string[] = []
+        let filesArrAdd = []
 
         if (!nombre) return ['El nombre es requerido', undefined]
         if (!marca) return ['La marca es requerida', undefined]
@@ -29,13 +31,18 @@ export class UpdateZapatoDTO {
         if (isNaN(precio)) return ['La precio es invalido', undefined]
         if (!stock) return ['El Stock es requerido', undefined]
         if (isNaN(stock)) return ['El Stock es invalido', undefined]
-        if (!Array.isArray(imagen)) return ['Se requiere mas de una imagen', undefined]
         if (Array.isArray(imagen)) {
-            filesArr = imagen.map((files) => {
-                return files.tempFilePath
+            filesArrAdd = imagen.map((files) => {
+                if (typeof (files) !== 'string') return files.tempFilePath
             })
         }
+        if (!Array.isArray(imagesDelete)) {
+            filesArrDelete.push(imagesDelete)
+        }
+        if (Array.isArray(imagesDelete)) {
+            filesArrDelete = imagesDelete
+        }
 
-        return [undefined, new UpdateZapatoDTO(nombre, marca, Number(talla), color, Number(precio), Number(stock), filesArr)]
+        return [undefined, new UpdateZapatoDTO(nombre, marca, Number(talla), color, Number(precio), Number(stock), filesArrAdd as string[], filesArrDelete as string[])]
     }
 }

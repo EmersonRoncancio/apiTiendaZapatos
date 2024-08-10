@@ -63,14 +63,10 @@ export class ZapatosController {
 
     UpdateZapato = (req: Request, res: Response) => {
         const { id } = req.params
-
         const body = req.body
 
-        if (!req.files?.image || Object.keys(req.files).length === 0) {
-            return res.status(400).json({ error: 'Ningun archivo fue cargado' });
-        }
+        const file = req.files?.image as UploadedFile | undefined
 
-        const file = req.files.image as UploadedFile
         const [error, UpdateDto] = UpdateZapatoDTO.start(body, file)
         if (error) return res.status(400).json({ error })
 
