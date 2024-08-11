@@ -117,9 +117,7 @@ export class ZapatosService {
 
         try {
 
-            UpdateDto?.imagesDelete?.map(async (image) => {
-                await cloudinaryAdapter.deleteImageArr(image)
-            })
+            await cloudinaryAdapter.deleteImageArr(UpdateDto.imagesDelete)
 
             const urls = await cloudinaryAdapter.uploadImageArr(UpdateDto.imagesAdd)
             UpdateDto.imagesAdd.forEach(async (filePath) => {
