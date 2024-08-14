@@ -31,9 +31,12 @@ export class UpdateZapatoDTO {
         if (isNaN(precio)) return ['La precio es invalido', undefined]
         if (!stock) return ['El Stock es requerido', undefined]
         if (isNaN(stock)) return ['El Stock es invalido', undefined]
+        if (!Array.isArray(imagen) && typeof (imagen) === 'object') {
+            filesArrAdd.push(imagen.tempFilePath)
+        }
         if (Array.isArray(imagen)) {
             filesArrAdd = imagen.map((files) => {
-                if (typeof (files) !== 'string') return files.tempFilePath
+                return files.tempFilePath
             })
         }
         if (!Array.isArray(imagesDelete)) {
